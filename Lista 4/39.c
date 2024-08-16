@@ -13,11 +13,16 @@ linhas do chamado Triangulo de Pascal:
 int main (){
     
     int num;
-    int numeros[10][10]={0};
+    int numeros[1000][1000]={0};
     int cont_total_num = 0;
     
-    printf ("Informe um numero: ");
+    printf ("Informe um numero <=1.000: ");
     scanf("%d", &num);
+    
+    while (num>=1000){
+        printf ("\nValor Invalido!\nInforme um numero\n(Obs.: O numero deve ser <10.000: ");
+        scanf("%d", &num);
+    }
     
     for (int m=0; m<num; m++){
         for (int n=0; n<num; n++){
@@ -32,6 +37,8 @@ int main (){
             }
         }
     }
+    
+    printf ("\nTRIANGULO DE PASCAL\n");
     
     for (int m=0; m<num; m++){
         for (int n=0; n<num; n++){
