@@ -8,7 +8,8 @@ int main()
 	int matriz[5][5]= {0};
 	int X;
 	int cont=0, cont_total_num=0;
-
+	
+	printf ("Preencha uma matriz 5x5: ");
 
 	for (int m=0; m<5; m++) {
 		for (int n=0; n<5; n++) {
@@ -30,7 +31,7 @@ int main()
 	for (int m=0; m<5; m++) {
 		for (int n=0; n<5; n++) {
 			if (matriz[m][n]==X) {
-				printf ("\nLinha: %d\nColuna: %d", m,n);
+				printf ("\nLinha: %d   Coluna: %d", m,n);
 			}
 			else {
 				cont++;
