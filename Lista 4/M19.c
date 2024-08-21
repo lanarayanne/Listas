@@ -1,4 +1,4 @@
-/* 8. FacB8a um programa que leia uma matriz de 5 linhas e 4 colunas contendo as seguintes
+/*FacB8a um programa que leia uma matriz de 5 linhas e 4 colunas contendo as seguintes
 informacB8oes sobre alunos de uma disciplina, sendo todas as informacB8 Koes do tipo inteiro: K
 b" Primeira coluna: numero de matr B4 B4D1cula (use um inteiro)
 b" Segunda coluna: media das provas B4
@@ -22,6 +22,7 @@ L*/
 int main()
 {
 	int matriz[5][4]= {0};
+// int matriz[5][4]= {60,12,30,0,61,23,32,0,62,33,50,0,63,15,45,0,64,65,98,0};
 	int vetor[3]= {0};
 	int opcao=0;
 	int valor_teste;
@@ -186,7 +187,7 @@ int main()
 		for (int n=0; n<4; n++) {
 		    if (n==3){
 		        if(matriz[m][n] == maior_nota){
-		            localizador_aluno= n;
+		            localizador_aluno= m;
 		        }
 		    }
 		}
@@ -194,8 +195,8 @@ int main()
 	
 	media_notas=(float)soma_notas/5;
 	
-	printf("\nMatricula do aluno com maior nota: %d\n\nNota = %d", matriz[localizador_aluno][0], matriz[localizador_aluno][3]);
-	printf("Media das notas finais = %.2f", media_notas);
+	printf("\nMatricula do aluno com maior nota: %d\nNota = %d", matriz[localizador_aluno][0], matriz[localizador_aluno][3]);
+	printf("\nMedia das notas finais = %.2f", media_notas);
 
 
 	return 0;
