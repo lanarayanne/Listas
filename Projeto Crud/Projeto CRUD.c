@@ -23,13 +23,20 @@ void imprimir_linha() {
 	printf ("\n----------------------------------\n");
 }
 
+//-- Essa funcao so funciona para Linux --
+void limpar_tela() {
+	system("clear");
+}
+
+//Uso essa funcao para transformar a placa toda em maiusculo.
 char letra_maiuscula(char letra) {
 	if(letra >= 97 && letra <=122) {
 		letra=letra-32;
 	}
 	return letra;
-} //Para deixar a placa em maiusculo
+}
 
+//Uso essa funcao para padronizar as strings: 1 letra em maiuscula e demais em minusculo
 char maiusculo_e_minusculo(char letra, int posicao) {
 	if (posicao == 0) {
 		if(letra >= 97 && letra <=122) {
@@ -44,6 +51,7 @@ char maiusculo_e_minusculo(char letra, int posicao) {
 	return letra;
 }
 
+//Esse e o tipo de variavel tipo struct chamado Onibus
 struct Onibus {
 	char placa[7];
 	int num_carro;
@@ -55,18 +63,14 @@ struct Onibus {
 //Validacao para ver se a quantidade de onibus cadastrados e maior que o maximo definido
 int conferir_quantidade_max_onibus(int quantidade) {
 	if (quantidade > MAX_ONIBUS) {
-		return 1;
-	}
-	else {
 		return 0;
 	}
+	else {
+		return 1;
+	}
 }
 
-void limpar_tela() {
-	system("clear"); // Essa funcao so funciona para Linux -- alterar para funcionar em todos
-}
-
-//Validacao para ver se tem onibus cadastrados
+//Validacao para ver se existem onibus cadastrados
 int conferir_quantidade_onibus_dif_zero(int quantidade) {
 	if (quantidade == 0) {
 		return 1;
@@ -76,6 +80,7 @@ int conferir_quantidade_onibus_dif_zero(int quantidade) {
 	}
 }
 
+//Ver se a placa segue a padronizacao certa EX XXX0000 ou XXX0X00
 int validar_placa(char *placa) {
 	int i;
 	int cont=0;
@@ -86,17 +91,17 @@ int validar_placa(char *placa) {
 	}
 
 	for (i=3; i<7; i++) {
-	    if (i==4){
-	        if ((placa[i] >= 48 && placa[i] <=57) || (placa[i] >= 65 && placa[i] <=90) || (placa[i] >= 97 && placa[i]<= 122) ) {
-			    cont++;
-		    }
-	    }
-	    else{
-	        if (placa[i] >= 48 && placa[i] <=57) {
-			    cont++;
-		    }
-	    }
-		
+		if (i==4) {
+			if ((placa[i] >= 48 && placa[i] <=57) || (placa[i] >= 65 && placa[i] <=90) || (placa[i] >= 97 && placa[i]<= 122) ) {
+				cont++;
+			}
+		}
+		else {
+			if (placa[i] >= 48 && placa[i] <=57) {
+				cont++;
+			}
+		}
+
 	}
 
 	if (cont == 7) {
@@ -109,63 +114,7 @@ int validar_placa(char *placa) {
 
 }
 
-void menu() {
-
-	imprimir_linha();
-	printf("Cadastro de Onibus");
-	imprimir_linha();
-	printf("(1) Adicionar Item\n"); //ok
-	printf("(2) Mostrar itens cadastrados\n"); //ok
-	printf("(3) Atualizar item cadastrado\n");//ok
-	printf("(4) Excluir item cadastrado\n");
-	printf("(5) Sair\n"); //ok
-	imprimir_linha();
-	printf("Escolha uma opcao: ");
-}
-
-struct Onibus adicionar() {
-	int i;
-
-	imprimir_linha();
-	printf("\nAdicionar Item\n");
-	imprimir_linha();
-	struct Onibus onibus;
-
-	while (getchar() != '\n');
-	printf("Placa: ");
-	scanf("%8s", onibus.placa);
-
-	for(i=0; i<3; i++) {
-		onibus.placa[i] = letra_maiuscula(onibus.placa[i]);
-	}
-
-	while (getchar() != '\n');
-	printf("Numero do carro: ");
-	scanf("%d", &onibus.num_carro);
-	
-	while (getchar() != '\n');
-	printf("Empresa: ");
-	scanf("%50[^\n]", onibus.empresa);
-	i=0;
-	while(onibus.empresa[i] != '\0') {
-		onibus.empresa[i] = maiusculo_e_minusculo(onibus.empresa[i], i);
-		i++;
-	}
-	while (getchar() != '\n');
-	printf("Cor: ");
-	scanf("%10s", onibus.cor);
-	i=0;
-	while(onibus.cor[i] != '\0') {
-		onibus.cor[i] = maiusculo_e_minusculo(onibus.cor[i], i);
-		i++;
-	}
-	
-	printf("Numero da linha: ");
-	scanf("%d", &onibus.linha);
-	while (getchar() != '\n');
-	return onibus;
-}
-
+//Conferir se a placa ja existe
 int conferir_placa(char *placa_nova, char *placa) {
 	int i, cont=0;
 
@@ -181,13 +130,102 @@ int conferir_placa(char *placa_nova, char *placa) {
 	else {
 		return 0;
 	}
-} //Conferir se a placa ja existe
+}
 
+//MENU
+void menu() {
+
+	imprimir_linha();
+	printf("Cadastro de Onibus");
+	imprimir_linha();
+	printf("(1) Adicionar Item\n"); //ok
+	printf("(2) Mostrar itens cadastrados\n"); //ok
+	printf("(3) Atualizar item cadastrado\n");//ok
+	printf("(4) Excluir item cadastrado\n");
+	printf("(5) Sair\n"); //ok
+	imprimir_linha();
+	printf("Escolha uma opcao: ");
+}
+
+//Funcao para adicionar um novo onibus -- Retorna um struct Onibus
+struct Onibus adicionar() {
+	int i;
+
+	imprimir_linha();
+	printf("\nAdicionar Item\n");
+	imprimir_linha();
+
+	//cria uma variavel do tipo stuct Onibus que se chama onibus
+	struct Onibus onibus;
+
+	//limpar buffer teclado
+	while (getchar() != '\n');
+
+	//Ler plcaca
+	printf("Placa (Ex: XXX0000 ou XXX0X00): ");
+	scanf("%8s", onibus.placa);
+
+	while(!validar_placa(onibus.placa)) {
+		printf("ERRO: Placa Invalida");
+		while (getchar() != '\n');
+		printf("\nPlaca: ");
+		scanf("%8s", onibus.placa);
+	}
+
+	//Quando inserir uma placa valida ele tranforma em maiusculo
+	for(i=0; i<7; i++) {
+		onibus.placa[i] = letra_maiuscula(onibus.placa[i]);
+	}
+
+	while (getchar() != '\n');
+
+	//Ler numero do carro
+	printf("Numero do carro: ");
+	scanf("%d", &onibus.num_carro);
+
+	while (getchar() != '\n');
+
+	//Ler nome da empresa
+	printf("Empresa: ");
+	scanf("%50[^\n]", onibus.empresa);
+
+	//Padroniza o nome
+	i=0;
+	while(onibus.empresa[i] != '\0') {
+		onibus.empresa[i] = maiusculo_e_minusculo(onibus.empresa[i], i);
+		i++;
+	}
+
+	while (getchar() != '\n');
+
+	//Ler cor do onibus
+	printf("Cor: ");
+	scanf("%50[^\n]", onibus.cor);
+
+	//Padronizar cor do onibus
+	i=0;
+	while(onibus.cor[i] != '\0') {
+		onibus.cor[i] = maiusculo_e_minusculo(onibus.cor[i], i);
+		i++;
+	}
+
+	while (getchar() != '\n');
+
+	//Ler numero da linha
+	printf("Numero da linha: ");
+	scanf("%d", &onibus.linha);
+	while (getchar() != '\n');
+
+	//Retorna o onibus criado;
+	return onibus;
+}
+
+//Funcao para listar onibus cadastrados -- NC#o retorna nada -- Recebe um struct Onibus e chama ele de onibus
 void mostrar(struct Onibus onibus) {
 	int i=0;
+
 	imprimir_linha();
-	printf("Itens cadastrados\n");
-	imprimir_linha();
+
 	printf("\nPlaca: %s", onibus.placa);
 	printf("\nNumero do carro: %d", onibus.num_carro);
 	printf("\nEmpresa: ");
@@ -195,7 +233,12 @@ void mostrar(struct Onibus onibus) {
 		printf("%c", onibus.empresa[i]);
 		i++;
 	}
-	printf("\nCor: %s", onibus.cor);
+	printf("\nCor: ");
+	i=0;
+	while(onibus.cor[i] != '\0') {
+		printf("%c", onibus.cor[i]);
+		i++;
+	}
 	printf("\nNumero da linha: %d\n", onibus.linha);
 }
 
@@ -209,13 +252,18 @@ void menu_atualizar() {
 	printf("\nOpcao: ");
 }
 
+//Funcao atualizar um item -- retorna nada e recebe um ponteiro para um struct Onibus chamdo onibus --
+//acessa diretamente o que esta sendo passado
 void atualizar(struct Onibus *onibus) {
 	int opcao = 0;
 	int i=0;
+
 	imprimir_linha();
-	printf("Atualizar item\n");
+	printf("Atualizar item");
 	imprimir_linha();
+
 	menu_atualizar();
+
 	scanf("%d", &opcao);
 
 	while (opcao < 1 || opcao >5) {
@@ -226,24 +274,42 @@ void atualizar(struct Onibus *onibus) {
 	switch(opcao) {
 	case 1:
 
-		getchar();
+		char nova_placa[7];
+
+		while (getchar() != '\n');
 		printf("Nova placa: ");
-		scanf("%s", onibus->placa);
-		for(i=0; i<3; i++) {
+		scanf("%s", nova_placa);
+
+		while(!validar_placa(nova_placa)) {
+			printf("ERRO: Placa Invalida");
+			while (getchar() != '\n');
+            // getchar();
+			printf("Placa: ");
+			scanf("%7s", nova_placa);
+		}
+
+		if(validar_placa(nova_placa)) {
+			for(i=0; i<7; i++) {
+				onibus->placa[i] = nova_placa[i];
+			}
+		}
+
+		for(i=0; i<7; i++) {
 			onibus->placa[i] = letra_maiuscula(onibus->placa[i]);
 		}
+
+		printf("Placa atualizada com sucesso!");
 		break;
 
 	case 2:
-
-		getchar();
+		while (getchar() != '\n');
 		printf("Novo numero do carro: ");
 		scanf("%d", &onibus->num_carro);
+		printf("Numero do carro atualizado com sucesso!");
 		break;
 
 	case 3:
-
-		getchar();
+		while (getchar() != '\n');
 		printf("Nova empresa: ");
 		scanf("%50[^\n]", onibus->empresa);
 		i=0;
@@ -251,11 +317,11 @@ void atualizar(struct Onibus *onibus) {
 			onibus->empresa[i] = maiusculo_e_minusculo(onibus->empresa[i], i);
 			i++;
 		}
+		printf("Empresa atualizada com sucesso!");
 		break;
 
 	case 4:
-
-		getchar();
+		while (getchar() != '\n');
 		printf("Nova cor: ");
 		scanf("%s", onibus->cor);
 		i=0;
@@ -263,30 +329,40 @@ void atualizar(struct Onibus *onibus) {
 			onibus->cor[i] = maiusculo_e_minusculo(onibus->cor[i], i);
 			i++;
 		}
+		printf("Cor atualizada com sucesso!");
 		break;
 
 	case 5:
-
-		getchar();
+		while (getchar() != '\n');
 		printf("Novo numero da linha: ");
 		scanf("%d", &onibus->linha);
+		printf("Linha atualizada com sucesso!");
 		break;
 	}
 }
 
+//Funcao excluir onibus -- recebe um ponteiro para uma variavel tipo Onibus, a quantidade total de onibus cadastrados e indice do onibus a ser excluido
 void excluir(struct Onibus *onibus, int quantidade, int localizador) {
 	int i;
+	int encontrar = 0;
+
 	imprimir_linha();
 	printf("Excluir item");
 	imprimir_linha();
 
+	//O loop roda enquanto houver onibus cadastrados-1 e quando encontra o indice do onibus pra escluir, substitui ele pelo proximo atC) o final
 	for(i=0; i<quantidade-1; i++) {
 		if (i == localizador) {
+			onibus[i] = onibus[i+1];
+			encontrar=1;
+		}
+		if (encontrar==1) {
 			onibus[i] = onibus[i+1];
 		}
 	}
 }
 
+//Funcao para sair do programa
 int sair() {
 	int fechar;
 	printf ("\nEncerrar programa ?\n(1) Para confirmar\n(2) Para retornar ao menu\nOpcao: ");
@@ -300,95 +376,112 @@ int sair() {
 
 }
 
+//FILE
 int file_adicionar(struct Onibus *onibus) {
 	//receber um onibus
 	FILE *adicionar = fopen("adicionar.txt", "a");
 	int i;
-	
+
 	if (adicionar==NULL) {
 		printf("O arquivo nao pode ser aberto");
 		return (EXIT_FAILURE);
 	}
-	
-	/*
-	char placa[7];
-	int num_carro;
-	char empresa[50];
-	char cor[10];
-	int linha;
-	*/
-	
+
 	fprintf(adicionar, "Placa: %s\n", onibus->placa);
-    fprintf(adicionar, "Numero do carro: %d\n", onibus->num_carro);
-    fprintf(adicionar, "Empresa: %s\n", onibus->empresa);
-    fprintf(adicionar, "Cor: %s\n", onibus->cor);
-    fprintf(adicionar, "Numero da linha: %d\n", onibus->linha);
-    
-// 	fclose(adicionar);
+	fprintf(adicionar, "Numero do carro: %d\n", onibus->num_carro);
+	fprintf(adicionar, "Empresa: %s\n", onibus->empresa);
+	fprintf(adicionar, "Cor: %s\n", onibus->cor);
+	fprintf(adicionar, "Numero da linha: %d\n", onibus->linha);
+
+	fclose(adicionar);
 	return (EXIT_SUCCESS);
 }
 
 int main()
 {
-	int opcao;
+	int opcao=0;
+	int nada;
 	int cont_onibus=0; //quantidade de onibus
 	int i=0;
 	struct Onibus onibus[MAX_ONIBUS];
 	memset(&onibus, 0x0, sizeof(onibus)); //Zerar a onibus;
 	int fechar = 0;
 
-
-	printf ("\n\n\t\tOLA!\n\n");
+	printf ("\n\t\tOLA!\n");
 
 	do {
-		menu();
-		scanf("%d", &opcao);
-
 		switch(opcao) {
+
+		case 0:
+			limpar_tela();
+			menu();
+			scanf("%d", &opcao);
+			break;
+
 		case 1:
 			limpar_tela();
-			onibus[cont_onibus] = adicionar();
 
-			if(!validar_placa(onibus[cont_onibus].placa)) {
-				printf("Nota! Placa Invalida\n(3) Para atualizar");
-			}
-			
-			int teste;
-			i=0;
+			if(conferir_quantidade_max_onibus(cont_onibus)) {
+				onibus[cont_onibus] = adicionar();
+				int teste;
+				i=0;
 
-			while(i<cont_onibus) {
-				teste = conferir_placa(onibus[cont_onibus].placa, onibus[i].placa);
-				if (teste) {
-					printf("\nOnibus ja cadastrado!\n");
-					break;
+				while(i<cont_onibus) {
+					teste = conferir_placa(onibus[cont_onibus].placa, onibus[i].placa);
+					if (teste) {
+						printf("\nOnibus ja cadastrado!\n");
+						break;
+					}
+					else {
+						i++;
+					}
 				}
-				else {
-					i++;
+				if(!teste) {
+					file_adicionar(&onibus[cont_onibus]);
+					printf("\n\nOnibus cadastrado com sucesso\n");
+					cont_onibus++;
 				}
 			}
-			if(!teste) {
-			    file_adicionar(&onibus[cont_onibus]);
-				printf("\n\nOnibus cadastrado com sucesso\n");
-				cont_onibus++;
+			else {
+				printf("\nNao e possivel cadastrar mais que %d onibus", MAX_ONIBUS);
 			}
+
+// 			while (getchar() != '\n');
+            getchar();
+			printf("\nQualquer tecla para retornar ao menu principal\n");
+			getchar();
+			opcao=0;
 
 			break;
 
 		case 2:
 			limpar_tela();
-			for(i=0; i<cont_onibus; i++) {
-				mostrar(onibus[i]);
+			imprimir_linha();
+			printf("Itens cadastrados");
+			imprimir_linha();
+			if (!conferir_quantidade_onibus_dif_zero(cont_onibus)) {
+				for(i=0; i<cont_onibus; i++) {
+					mostrar(onibus[i]);
+				}
 			}
-
+			else {
+				printf("Nao ha onibus cadastrados");
+			}
+			while (getchar() != '\n');
+			printf("\nQualquer tecla para retornar ao menu principal\n");
+			getchar();
+			opcao=0;
 			break;
 
 		case 3:
 			limpar_tela();
 			char nova_placa[7];
 			int localizador, cont=0;
+			int teste=0;
+
 			printf("Informe a placa do Onibus que deseja atualizar: ");
 			scanf("%s", nova_placa);
-			for(i=0; i<3; i++) {
+			for(i=0; i<7; i++) {
 				nova_placa[i] = letra_maiuscula(nova_placa[i]);
 			}
 
@@ -408,7 +501,10 @@ int main()
 			else {
 				atualizar(&onibus[localizador]);
 			}
-
+			while (getchar() != '\n');
+			printf("\nQualquer tecla para retornar ao menu principal\n");
+			getchar();
+			opcao=0;
 			break;
 
 		case 4:
@@ -416,7 +512,7 @@ int main()
 			cont=0;
 			printf("Informe a placa do Onibus que deseja excluir: ");
 			scanf("%s", nova_placa);
-			for(i=0; i<3; i++) {
+			for(i=0; i<7; i++) {
 				nova_placa[i] = letra_maiuscula(nova_placa[i]);
 			}
 
@@ -438,24 +534,28 @@ int main()
 				cont_onibus--;
 				printf("\nOnibus excluido com sucesso\n");
 			}
+			while (getchar() != '\n');
+			printf("\nQualquer tecla para retornar ao menu principal\n");
+			getchar();
+			opcao=0;
 			break;
 
 		case 5:
 			limpar_tela();
 			fechar=sair();
-
-
 			break;
 
 		default:
 			limpar_tela();
 			printf("\nOpcao Invalida!\n");
-
+			menu();
+			scanf("%d", &opcao);
 			break;
 		}
 
 
-	} while(fechar !=1);
+	}
+	while(fechar !=1);
 
 	imprimir_linha();
 	printf("Programa Encerrado com Sucesso !");
